@@ -1,0 +1,44 @@
+---
+title: "HW_11_DS775"
+author: "Jarrod Pelkofer"
+date: "April 2, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 20.1-3e
+```{r}
+
+sales <- c(rep(2,4), rep(3,7), rep(4,8), rep(5,5), 6)
+set.seed(44)
+sales_sim <- sample(sales, 300, replace = TRUE)
+mean_sim <- mean(sales_sim)
+mean_sim
+
+```
+
+e) The 300 day simulation resulted in an average of 3.613 stoves per day, .067 stoves/day less than the 25 day average.
+
+``` {r}
+set.seed(101)
+simulations <- 1000
+
+purchasePrice <- 1.50
+salesPrice <- 2.50
+refundPrice <- 0.50
+
+copiesOrdered <- 60
+
+for(i in 1:5){
+  copiesSold <- sample(40:70, simulations, replace = TRUE)
+  SalesRevenue <- salesPrice*pmin(copiesOrdered,copiesSold)
+  PurchasingCost <- purchasePrice*copiesOrdered
+  Refund <- refundPrice*pmax(copiesOrdered-copiesSold,0)
+  Profit <- SalesRevenue-PurchasingCost+Refund
+  avgProfit <- mean(Profit)
+  print(avgProfit)
+}
+```
