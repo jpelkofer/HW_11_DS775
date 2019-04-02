@@ -22,23 +22,30 @@ mean_sim
 
 e) The 300 day simulation resulted in an average of 3.613 stoves per day, .067 stoves/day less than the 25 day average.
 
-``` {r}
-set.seed(101)
+## 20.6-6
+```{r}
 simulations <- 1000
 
 purchasePrice <- 1.50
 salesPrice <- 2.50
 refundPrice <- 0.50
 
-copiesOrdered <- 60
+copiesOrdered <- c(50:60)
 
-for(i in 1:5){
+for(i in 1:length(copiesOrdered)){
+  set.seed(101)
   copiesSold <- sample(40:70, simulations, replace = TRUE)
-  SalesRevenue <- salesPrice*pmin(copiesOrdered,copiesSold)
-  PurchasingCost <- purchasePrice*copiesOrdered
-  Refund <- refundPrice*pmax(copiesOrdered-copiesSold,0)
+  SalesRevenue <- salesPrice*pmin(copiesOrdered[i],copiesSold)
+  PurchasingCost <- purchasePrice*copiesOrdered[i]
+  Refund <- refundPrice*pmax(copiesOrdered[i]-copiesSold,0)
   Profit <- SalesRevenue-PurchasingCost+Refund
   avgProfit <- mean(Profit)
-  print(avgProfit)
+  print(paste("Order Quantity:", copiesOrdered[i], "Mean:", avgProfit))
 }
+```
+The average profit it highest at an order quantity of 54.
+
+##HW 20.6-7
+```{r}
+
 ```
