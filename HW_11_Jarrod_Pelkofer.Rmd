@@ -84,5 +84,61 @@ d) There is a probability of 1.9% that the college fund will be at least $40,000
 
 ##HW 20.6-9
 ```{r}
+library(triangle)
+library(tidyverse)
 
+#a)
+project_cost <- 5000000
+bid_cost <- 50000
+RPI_Bid <- 5700000
+RPI_Total_Cost <- bid_cost + project_cost
+RPI_Profit <- RPI_Bid - RPI_Total_Cost
+
+set.seed(99)
+competitor_1 <- rtriangle(1000, a = (project_cost*1.05), b = (project_cost*1.40), c = (project_cost*1.20))
+competitor_2 <- rtriangle(1000, a = (project_cost*1.05), b = (project_cost*1.40), c = (project_cost*1.20))
+competitor_3 <- rtriangle(1000, a = (project_cost*1.05), b = (project_cost*1.40), c = (project_cost*1.20))
+competitor_4 <- rtriangle(1000, a = (project_cost*1.05), b = (project_cost*1.40), c = (project_cost*1.20))
+
+RPI_Bids <- rep(RPI_Bid, 1000)
+min_bid <- pmin(RPI_Bids, competitor_1, competitor_2, competitor_3, competitor_4)
+prob_RPI_WIN <- sum(min_bid==RPI_Bid)/length(min_bid)
+
+profit <-  double()
+for(b in 1:length(min_bid)){
+  if(min_bid[b] == RPI_Bid){
+    profit <- c(profit, RPI_Profit)
+  }else{
+    profit <- c(profit, -50000)
+  }
+}
+
+avg_profit <- mean(profit)
+
+
+#b)
+RPI_Bid <- seq(5300000,6000000, 100000)
+avg_profits <- double()
+for(b in 1:length(RPI_Bid)){
+  profit <-  double()
+  RPI_Bids <- rep(RPI_Bid[b], 1000)
+  min_bid <- pmin(RPI_Bids, competitor_1, competitor_2, competitor_3, competitor_4)
+  for(m in 1:length(min_bid)){
+    if(min_bid[m] == RPI_Bid[b]){
+      gain <- RPI_Bid[b] - RPI_Total_Cost
+      profit <- c(profit, gain)
+    }else{
+      profit <- c(profit, -50000)
+    }
+  }
+  avg_profits <- c(avg_profits, mean(profit))
+}  
+
+parameter_report <- data.frame(RPI_Bid, avg_profits)
+parameter_report
+
+#c)
+ggplot(parameter_report, aes(RPI_Bid, avg_profits)) +
+  geom_line() +
+  geom_point()
 ```
