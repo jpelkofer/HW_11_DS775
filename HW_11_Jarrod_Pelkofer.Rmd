@@ -83,14 +83,14 @@ c) There is a probability of 71.5% that the college fund will be at least $35,00
 d) There is a probability of 1.9% that the college fund will be at least $40,000.
 
 ##HW 20.6-9
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(triangle)
 library(tidyverse)
 
 #a)
-project_cost <- 5000000
-bid_cost <- 50000
-RPI_Bid <- 5700000
+project_cost <- 5
+bid_cost <- .05
+RPI_Bid <- 5.7
 RPI_Total_Cost <- bid_cost + project_cost
 RPI_Profit <- RPI_Bid - RPI_Total_Cost
 
@@ -109,7 +109,7 @@ for(b in 1:length(min_bid)){
   if(min_bid[b] == RPI_Bid){
     profit <- c(profit, RPI_Profit)
   }else{
-    profit <- c(profit, -50000)
+    profit <- c(profit, -.05)
   }
 }
 
@@ -117,8 +117,9 @@ avg_profit <- mean(profit)
 
 
 #b)
-RPI_Bid <- seq(5300000,6000000, 100000)
+RPI_Bid <- seq(5.3,6.0, .1)
 avg_profits <- double()
+st_devs <- double()
 for(b in 1:length(RPI_Bid)){
   profit <-  double()
   RPI_Bids <- rep(RPI_Bid[b], 1000)
@@ -128,17 +129,36 @@ for(b in 1:length(RPI_Bid)){
       gain <- RPI_Bid[b] - RPI_Total_Cost
       profit <- c(profit, gain)
     }else{
-      profit <- c(profit, -50000)
+      profit <- c(profit, -.05)
     }
   }
+  st_devs <- c(st_devs, sd(profit))
   avg_profits <- c(avg_profits, mean(profit))
 }  
 
-parameter_report <- data.frame(RPI_Bid, avg_profits)
+parameter_report <- data.frame(RPI_Bid, avg_profits, st_devs)
 parameter_report
 
 #c)
 ggplot(parameter_report, aes(RPI_Bid, avg_profits)) +
   geom_line() +
-  geom_point()
+  geom_point() + 
+  geom_ribbon(aes(ymin=avg_profits-st_devs, ymax=avg_profits+st_devs, x=RPI_Bid, fill = "band"), alpha = .3) + 
+  scale_fill_manual("", values = 'grey12') + 
+  labs(title = "Simulated Avg Profit", y = "Avg Profit (In Millions)", x = "RPI Bid (In Millions)") +
+  theme(legend.position = "none")
+
+#d) potentially a larger loop
 ```
+
+a) The probability that RPI will win the bid is 52.1%. The average profit would be $314,700.
+b) A bid of $5.5 million maximizes RPI's average profit.
+d)
+
+## HW 28.3
+a) Uniform distribution with parameters(302, 496)
+b) Max Extreme distribution with parameters(363.9972, 46.4134)
+
+
+## HW 28.4
+
