@@ -183,10 +183,41 @@ b) Max Extreme distribution with parameters(363.9972, 46.4134)
 
 ## HW 28.4
 ```{r}
-
+#a)
 sims <- 1000
 set.seed(333)
 funding <- rnorm(sims, 6, 1)
 design <- runif(sims, 6, 10)
 site_prep <- rtriangle(sims, 1.5, 2.5, 2)
+foundation <- rtriangle(sims, 1.5, 3, 2)
+framing <- rtriangle(sims, 3,6,4)
+electric <- rtriangle(sims, 2,5,3)
+plumbing <- rtriangle(sims, 3,5,4)
+walls_roof <- rtriangle(sims, 4,7,5)
+finish_work <- rtriangle(sims, 5,7,6)
+landscape <- rep(5, 1000)
 
+completion_times <- funding+design+site_prep+foundation+framing+electric+plumbing+walls_roof+finish_work+landscape
+avg_completion_time <- mean(completion_times)
+avg_completion_time
+
+#b) 
+thirty_six <- sum(completion_times <= 36)/length(completion_times)
+thirty_six
+
+#c) 
+tasks <- data.frame(funding, design, site_prep, foundation, framing, electric, plumbing, walls_roof, finish_work, landscape, completion_times)
+sensitivity <- as.data.frame(t(cor(tasks$completion_times, tasks)))
+sensitivity <- sensitivity %>% rename(cor = V1)
+task <- c('funding', 'design', 'site_prep', 'foundation', 'framing', 'electric', 'plumbing', 'walls_roof', 'finish_work', 'landscape', 'completion_times')
+sensitivity <- data.frame(task, sensitivity$cor)
+sensitivity <- sensitivity %>% rename(cor = sensitivity.cor)
+ggplot(sensitivity %>% drop_na() %>% filter(cor < 1), aes(fct_reorder(task, cor), cor)) +
+         geom_bar(stat = 'identity') +
+         coord_flip() +
+         labs(title = 'Sensitivity Chart', x='Task')
+```
+
+a) The average completion time of the project is 46.26 months over 1000 simulations.
+b) 
+)
