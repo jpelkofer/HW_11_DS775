@@ -148,12 +148,33 @@ ggplot(parameter_report, aes(RPI_Bid, avg_profits)) +
   labs(title = "Simulated Avg Profit", y = "Avg Profit (In Millions)", x = "RPI Bid (In Millions)") +
   theme(legend.position = "none")
 
-#d) potentially a larger loop
+#d) 
+
+RPI_Bid <- seq(5.3,6.0, .01)
+avg_profits <- double()
+st_devs <- double()
+for(b in 1:length(RPI_Bid)){
+  profit <-  double()
+  RPI_Bids <- rep(RPI_Bid[b], 10000)
+  min_bid <- pmin(RPI_Bids, competitor_1, competitor_2, competitor_3, competitor_4)
+  for(m in 1:length(min_bid)){
+    if(min_bid[m] == RPI_Bid[b]){
+      gain <- RPI_Bid[b] - RPI_Total_Cost
+      profit <- c(profit, gain)
+    }else{
+      profit <- c(profit, -.05)
+    }
+  }
+  avg_profits <- c(avg_profits, mean(profit))
+}
+
+bid_profits <- data.frame(RPI_Bid, avg_profits)
+bid_profits %>% filter(avg_profits==max(avg_profits))
 ```
 
 a) The probability that RPI will win the bid is 52.1%. The average profit would be $314,700.
 b) A bid of $5.5 million maximizes RPI's average profit.
-d)
+d) Looking at 71 bid amounts and running 10,000 simulations on each, a bid of $5.53 million maximized the mean profit (368,170). 
 
 ## HW 28.3
 a) Uniform distribution with parameters(302, 496)
@@ -161,4 +182,11 @@ b) Max Extreme distribution with parameters(363.9972, 46.4134)
 
 
 ## HW 28.4
+```{r}
+
+sims <- 1000
+set.seed(333)
+funding <- rnorm(sims, 6, 1)
+design <- runif(sims, 6, 10)
+site_prep <- rtriangle(sims, 1.5, 2.5, 2)
 
