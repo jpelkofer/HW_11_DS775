@@ -233,12 +233,12 @@ bump_cost <- -450
 reservations_accepted <- c(180:190)
 sim_Size <- 1000 
 set.seed(1000)
-demand <- rnorm(sim_Size, 195, 30)
+demand <- round(rnorm(sim_Size, 195, 30),0)
 
 avg_profit <- double()
 sd_profit <- double()
 for(i in 1:length(reservations_accepted)){
-  actual <- rbinom(sim_Size, reservations_accepted[i], .80)
+  actual <- rbinom(sim_Size, pmin(reservations_accepted[i], demand), .80)
   
   filled_seats <- pmin(available_seats, actual)
   avg_filled_seats <- mean(filled_seats)
@@ -258,8 +258,6 @@ parameter_report
 ggplot(parameter_report, aes(reservations_accepted, avg_profit)) +
   geom_line() +
   geom_point() +
-  geom_ribbon(aes(ymin=avg_profit-sd_profit, ymax=avg_profit+sd_profit, x=reservations_accepted, fill = "band"), alpha = .3) + 
-  scale_fill_manual("", values = 'grey12') +
   scale_x_continuous(breaks = c(180:190)) + 
   theme(legend.position = "none")
 
@@ -267,12 +265,12 @@ ggplot(parameter_report, aes(reservations_accepted, avg_profit)) +
 reservations_accepted <- c(150:200)
 sim_Size <- 1000 
 set.seed(1000)
-demand <- rnorm(sim_Size, 195, 30)
+demand <- round(rnorm(sim_Size, 195, 30),0)
 
 avg_profit <- double()
 sd_profit <- double()
 for(i in 1:length(reservations_accepted)){
-  actual <- rbinom(sim_Size, reservations_accepted[i], .80)
+  actual <- rbinom(sim_Size, pmin(reservations_accepted[i], demand), .80)
   
   filled_seats <- pmin(available_seats, actual)
   avg_filled_seats <- mean(filled_seats)
@@ -292,5 +290,5 @@ best
 
 ```
 
-a) Over 1000 simiulations, accepting 185 reservations yielded the highest average profit (13,444.95). Accepting 180 reservations yielded the lowest average profit (12979.80).
-c) Over 1000 simiulations, accepting 185 reservations yielded the highest average profit (13,466.25).
+a) Over 1000 simiulations, accepting 185 reservations yielded the highest average profit (11,898.75). Accepting 180 reservations yielded the lowest average profit (12979.80).
+c) Over 1000 simiulations, accepting 185 reservations yielded the highest average profit (11,965.20).
