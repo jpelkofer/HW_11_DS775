@@ -183,6 +183,9 @@ b) Max Extreme distribution with parameters(363.9972, 46.4134)
 
 ## HW 28.4
 ```{r}
+library(triangle)
+library(tidyverse)
+
 #a)
 sims <- 1000
 set.seed(333)
@@ -197,7 +200,9 @@ walls_roof <- rtriangle(sims, 4,7,5)
 finish_work <- rtriangle(sims, 5,7,6)
 landscape <- rep(5, 1000)
 
-completion_times <- funding+design+site_prep+foundation+framing+electric+plumbing+walls_roof+finish_work+landscape
+completion_times <- funding+pmax(design,site_prep)+foundation+pmax(electric,(framing + plumbing)) + walls_roof + pmax(finish_work, landscape)
+
+
 avg_completion_time <- mean(completion_times)
 avg_completion_time
 
@@ -212,15 +217,16 @@ sensitivity <- sensitivity %>% rename(cor = V1)
 task <- c('funding', 'design', 'site_prep', 'foundation', 'framing', 'electric', 'plumbing', 'walls_roof', 'finish_work', 'landscape', 'completion_times')
 sensitivity <- data.frame(task, sensitivity$cor)
 sensitivity <- sensitivity %>% rename(cor = sensitivity.cor)
-ggplot(sensitivity %>% drop_na() %>% filter(cor < 1), aes(fct_reorder(task, cor), cor)) +
+ggplot(sensitivity %>% drop_na() %>% filter(cor < .99), aes(fct_reorder(task, cor), cor)) +
          geom_bar(stat = 'identity') +
          coord_flip() +
          labs(title = 'Sensitivity Chart', x='Task')
 ```
 
-a) The average completion time of the project is 46.26 months over 1000 simulations.
-b) 
-c)
+a) The average completion time of the project is 35.92 months over 1000 simulations.
+b) There is a 52.9% chance that the project completes in 36 months or less.
+c) Based on the sensitivity chart, the design of the builing is having the largest impact on completion time.
+
 
 ##28.10
 ```{r}
